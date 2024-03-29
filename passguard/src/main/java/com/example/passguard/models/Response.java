@@ -1,12 +1,14 @@
-package com.example.passguard.util;
+package com.example.passguard.models;
 
-public abstract class BaseResponse {
+public class Response {
     private final String status;
     private final Integer code;
+    private final Object data;
 
-    public BaseResponse(String status, Integer code) {
+    public Response(String status, Integer code, Object data) {
         this.status = status;
         this.code = code;
+        this.data = data;
     }
 
     public String getStatus() {
@@ -15,5 +17,9 @@ public abstract class BaseResponse {
 
     public Integer getCode() {
         return code;
+    }
+
+    public Object getData() {
+        return data;
     }
 }

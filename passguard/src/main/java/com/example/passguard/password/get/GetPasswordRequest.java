@@ -1,6 +1,6 @@
 package com.example.passguard.password.get;
 
-import com.example.passguard.util.BaseRequest;
+import com.example.passguard.models.BaseRequest;
 
 public class GetPasswordRequest extends BaseRequest {
 

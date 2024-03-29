@@ -1,4 +1,4 @@
-package com.example.passguard.util;
+package com.example.passguard.models;
 
 public abstract class BaseRequest {
     final private String token;

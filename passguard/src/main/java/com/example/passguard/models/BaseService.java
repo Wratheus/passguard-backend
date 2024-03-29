@@ -1,4 +1,4 @@
-package com.example.passguard.util;
+package com.example.passguard.models;
 
 public abstract class BaseService {
     private final BaseRequest request;
@@ -11,5 +11,5 @@ public abstract class BaseService {
         return request;
     }
 
-    public abstract BaseResponse getResponse();
+    public abstract Response getResponse();
 }

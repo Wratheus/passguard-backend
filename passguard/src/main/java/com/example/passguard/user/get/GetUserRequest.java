@@ -1,6 +1,6 @@
 package com.example.passguard.user.get;
 
-import com.example.passguard.util.BaseRequest;
+import com.example.passguard.models.BaseRequest;
 
 public class GetUserRequest extends BaseRequest {
     private final int id;
