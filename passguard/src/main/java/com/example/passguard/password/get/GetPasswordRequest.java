@@ -1,8 +1,8 @@
-package com.example.passguard.password;
+package com.example.passguard.password.get;
 
 import com.example.passguard.util.BaseRequest;
 
-public class GetPasswordRequest extends BaseRequest  {
+public class GetPasswordRequest extends BaseRequest {
 
     private final int id;
 

@@ -1,5 +1,7 @@
 package com.example.passguard.user;
 
+import com.example.passguard.user.get.GetUserRequest;
+import com.example.passguard.user.get.GetUserService;
 import com.example.passguard.util.BaseResponse;
 import com.example.passguard.util.ResponseMapper;
 import org.springframework.web.bind.annotation.*;

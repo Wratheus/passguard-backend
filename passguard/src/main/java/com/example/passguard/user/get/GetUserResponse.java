@@ -1,5 +1,6 @@
-package com.example.passguard.user;
+package com.example.passguard.user.get;
 
+import com.example.passguard.user.User;
 import com.example.passguard.util.BaseResponse;
 
 public class GetUserResponse extends BaseResponse {

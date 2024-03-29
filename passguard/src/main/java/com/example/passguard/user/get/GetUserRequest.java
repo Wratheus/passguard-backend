@@ -1,4 +1,4 @@
-package com.example.passguard.user;
+package com.example.passguard.user.get;
 
 import com.example.passguard.util.BaseRequest;
 
