@@ -10,4 +10,7 @@ public class GetUserResponse extends BaseResponse {
         this.user = user;
     }
 
+    public User getUser() {
+        return user;
+    }
 }

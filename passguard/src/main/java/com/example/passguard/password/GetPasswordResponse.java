@@ -10,4 +10,7 @@ public class GetPasswordResponse extends BaseResponse {
         this.password = password;
     }
 
+    public Password getPassword() {
+        return password;
+    }
 }

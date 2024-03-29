@@ -2,19 +2,17 @@ package com.example.passguard.password;
 
 import com.example.passguard.util.BaseRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GetPasswordRequest extends BaseRequest  {
 
-    private int userId;
+    private final int id;
 
-    public GetPasswordRequest(String token) {
+    public GetPasswordRequest(String token, int id) {
         super(token);
+        this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
 }

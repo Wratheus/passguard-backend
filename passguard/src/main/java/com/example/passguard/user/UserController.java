@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    @GetMapping("/getUser")
+    @PostMapping("/get")
     public String getUser(@RequestBody GetUserRequest request) {
         final GetUserService service = new GetUserService(request);
         final BaseResponse response = service.getResponse();
