@@ -13,6 +13,8 @@ public class TokenController {
         this.service = tokenService;
     }
 
-    // Обработка HTTP запросов
+    public String getTokenById(int userId) {
+        return service.getToken((long) userId);
+    }
 }
 
