@@ -1,7 +1,7 @@
-package com.example.passguard.user;
+package com.example.passguard.requests.user;
 
 import com.example.passguard.models.Response;
-import com.example.passguard.user.get.GetUserRequest;
+import com.example.passguard.requests.user.get.GetUserRequest;
 import com.example.passguard.util.ResponseConstants;
 import org.springframework.stereotype.Service;
 

@@ -1,24 +1,22 @@
-package com.example.passguard.user;
-
+package com.example.passguard.requests.password;
 import com.example.passguard.models.Response;
-import com.example.passguard.token.TokenService;
-import com.example.passguard.user.get.GetUserRequest;
+import com.example.passguard.requests.password.get.GetPasswordRequest;
 import com.example.passguard.util.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
-    private final UserService service;
+@RequestMapping("/password")
+public class PasswordController {
+    final private PasswordService service;
 
     @Autowired
-    public UserController(UserService service) {
+    public PasswordController(PasswordService service) {
         this.service = service;
     }
 
     @PostMapping("/get")
-    public String getUser(@RequestBody GetUserRequest request) {
+    public String getPassword(@RequestBody GetPasswordRequest request) {
         final Response response = service.getResponse(request);
         return Resource.fromResponse(response);
     }

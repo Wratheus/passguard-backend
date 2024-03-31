@@ -1,4 +1,4 @@
-package com.example.passguard.user;
+package com.example.passguard.requests.user;
 
 import java.util.Objects;
 
@@ -7,10 +7,6 @@ public class User {
 
     public User(int id) {
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

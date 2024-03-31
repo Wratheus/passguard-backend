@@ -1,4 +1,4 @@
-package com.example.passguard.password.get;
+package com.example.passguard.requests.password.get;
 
 import com.example.passguard.models.BaseRequest;
 
@@ -10,9 +10,4 @@ public class GetPasswordRequest extends BaseRequest {
         super(token);
         this.id = id;
     }
-
-    public int getId() {
-        return id;
-    }
-
 }

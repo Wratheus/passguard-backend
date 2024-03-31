@@ -1,4 +1,4 @@
-package com.example.passguard.password;
+package com.example.passguard.requests.password;
 
 import java.util.Objects;
 

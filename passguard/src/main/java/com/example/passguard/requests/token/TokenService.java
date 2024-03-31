@@ -1,4 +1,4 @@
-package com.example.passguard.token;
+package com.example.passguard.requests.token;
 
 import com.example.passguard.repositories.DAO.TokenDAO;
 import org.springframework.beans.factory.annotation.Autowired;
