@@ -8,10 +8,13 @@ public class TokenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
-    private final long userId;
-    private final String token;
-    private final long date;
+    private long id;
+    @Column(name = "user_id")
+    private long userId;
+    @Column(name = "token")
+    private String token;
+    @Column(name = "date")
+    private long date;
 
 
     public long getUserId() {
@@ -22,10 +25,15 @@ public class TokenEntity {
         return token;
     }
 
-    public TokenEntity(long id, long userId, String token, long date) {
-        this.id = id;
+    public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setDate(long date) {
         this.date = date;
     }
 }

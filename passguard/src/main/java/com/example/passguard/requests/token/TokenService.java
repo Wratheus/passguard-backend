@@ -1,23 +1,24 @@
 package com.example.passguard.requests.token;
 
-import com.example.passguard.repositories.DAO.TokenDAO;
+import com.example.passguard.repositories.DAO.TokenEntityDAO;
 import com.example.passguard.repositories.entities.TokenEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TokenService {
 
-    private final TokenDAO tokenDAO;
+    private final TokenEntityDAO tokenDAO;
 
     @Autowired
-    public TokenService(TokenDAO tokenDAO) {
+    public TokenService(TokenEntityDAO tokenDAO) {
         this.tokenDAO = tokenDAO;
     }
 
-    public String getToken(Long id) {
-        TokenEntity entity = tokenDAO.findById(TokenEntity.class, id);
-
-        return entity.toString();
+    public Optional<String> getToken(Long id) {
+        Optional<TokenEntity> entity = tokenDAO.findById(id);
+        return entity.map(TokenEntity::getToken);
     }
 }

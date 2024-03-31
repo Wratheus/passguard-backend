@@ -9,14 +9,22 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private final String email;
-    private final String username;
-    private final long date;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "username")
+    private String username;
+    @Column(name = "date")
+    private long date;
 
-    public UserEntity(Long id, String email, String username, long date) {
-        this.id = id;
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -35,4 +43,6 @@ public class UserEntity {
     public long getDate() {
         return date;
     }
+
+
 }

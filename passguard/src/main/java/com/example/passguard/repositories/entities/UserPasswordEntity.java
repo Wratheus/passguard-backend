@@ -9,13 +9,22 @@ public class UserPasswordEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final long userId;
-    private final String password;
-    private final long date;
+    @Column(name = "user_id")
+    private long userId;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "date")
+    private long date;
 
-    public UserPasswordEntity(long userId, String password, long date) {
+    public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setDate(long date) {
         this.date = date;
     }
 

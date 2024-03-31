@@ -8,17 +8,30 @@ import jakarta.persistence.*;
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
-    private final long userId;
-    private final String password;
-    private final String login;
-    private final long date;
+    private long id;
+    @Column(name = "user_id")
+    private long userId;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "login")
+    private String login;
 
-    public ProductEntity(long id, long userId, String password, String login, long date) {
-        this.id = id;
+
+    private long date;
+
+    public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setLogin(String login) {
         this.login = login;
+    }
+
+    public void setDate(long date) {
         this.date = date;
     }
 
