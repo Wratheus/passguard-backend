@@ -1,28 +1,25 @@
 package com.example.passguard.repositories.entities;
 
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "products")
-public class ProductEntity {
+@Table(name = "passwords")
+public class UserPasswordEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    private Long id;
     private final long userId;
     private final String password;
-    private final String login;
     private final long date;
 
-    public ProductEntity(long id, long userId, String password, String login, long date) {
-        this.id = id;
+    public UserPasswordEntity(long userId, String password, long date) {
         this.userId = userId;
         this.password = password;
-        this.login = login;
         this.date = date;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -34,11 +31,8 @@ public class ProductEntity {
         return password;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
     public long getDate() {
         return date;
     }
 }
+

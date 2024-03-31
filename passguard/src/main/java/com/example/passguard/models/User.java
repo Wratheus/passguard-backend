@@ -1,6 +1,6 @@
 package com.example.passguard.models;
 
-public record User(int id, String email, String username) {
+public record User(long id, String email, String username) {
 
 
 }

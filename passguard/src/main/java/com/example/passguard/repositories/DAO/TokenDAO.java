@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class TokenDAO extends GenericDao<TokenEntity, Long> implements TokenDaoI {
+public class TokenDAO extends GenericDAO<TokenEntity, Long> implements TokenDaoI {
 
     private final SessionFactory sessionFactory;
 

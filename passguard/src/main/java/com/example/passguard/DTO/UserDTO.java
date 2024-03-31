@@ -6,7 +6,7 @@ public class UserDTO {
     private String email;
 
 
-    public void setId(int id) {
+    public void setId(Long id) {
     }
 
     public void setUsername(String username) {
