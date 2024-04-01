@@ -9,7 +9,6 @@ public class GetUserRequest extends BaseRequest {
         return id;
     }
 
-
     public GetUserRequest(long id, String token) {
         super(token);
         this.id = id;

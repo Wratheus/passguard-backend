@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.HttpURLConnection;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,51 +41,43 @@ public class UserService {
     }
 
     public Response getUser(GetUserRequest request) {
-        long userId = request.getId();
+        if (!tokenProvider.validateToken(request.getToken())) {
+            return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
+                    "Failed token validation");
+        }
 
+        Long userId = request.getId();
         Optional<UserEntity> user = userDAO.findById(userId);
         if (user.isEmpty()) {
             return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
-                    "Object not found");
+                    "User not found");
         }
         UserDTO userDTO = EntityDTOMapper.convertUserToUserDto(user.get());
 
-        Optional<TokenEntity> token = tokenDAO.findById(userDTO.getId());
-        if (token.isEmpty()) {
-            return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
-                    "Object not found");
-        }
-        TokenDTO tokenDTO = EntityDTOMapper.convertTokenToUserDto(token.get());
-
-        if (request.getToken().equals(tokenDTO.getToken())) {
-            return new Response(ResponseConstants.SUCCESS, HttpURLConnection.HTTP_OK,
-                    new User(1, "alex-pavlenko-net-2013@yandex.ru", "wratheus"));
-        } else {
-            return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
-                    null);
-        }
+        return new Response(ResponseConstants.SUCCESS, HttpURLConnection.HTTP_OK,
+                new User(1, "alex-pavlenko-net-2013@yandex.ru", "wratheus"));
     }
 
     @Transactional
     public Response registerUser(RegisterUserRequest request) {
-        long date = System.currentTimeMillis();
+        Instant date = Instant.now();
         // Запись юзера
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(request.getEmail());
         userEntity.setUsername(request.getUsername());
-        userEntity.setDate(date);
+        userEntity.setDate(date.toEpochMilli());
         userEntity = userDAO.save(userEntity);
         // Запись пароля
         UserPasswordEntity passwordEntity = new UserPasswordEntity();
         passwordEntity.setPassword(request.getPassword());
-        passwordEntity.setDate(date);
+        passwordEntity.setDate(date.toEpochMilli());
         passwordEntity.setUserId(userEntity.getId());
         userPasswordDAO.save(passwordEntity);
         // Запись JWT
         String accessToken = tokenProvider.generateToken(userEntity.getUsername());
         TokenEntity tokenEntity = new TokenEntity();
         tokenEntity.setToken(accessToken);
-        tokenEntity.setDate(date);
+        tokenEntity.setDate(date.toEpochMilli());
         tokenEntity.setUserId(userEntity.getId());
         tokenEntity = tokenDAO.save(tokenEntity);
 

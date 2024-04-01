@@ -3,6 +3,7 @@ package com.example.passguard.repositories.DAO;
 import com.example.passguard.repositories.entities.TokenEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,13 @@ public class TokenEntityDAO implements CrudRepository<TokenEntity, Long> {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public Optional<TokenEntity> findByToken(String token) {
+        TypedQuery<TokenEntity> query = entityManager.createQuery(
+                "SELECT t FROM TokenEntity t WHERE t.token = :token", TokenEntity.class);
+        query.setParameter("token", token);
+        return query.getResultList().stream().findFirst();
+    }
 
     @Override
     public <S extends TokenEntity> S save(S entity) {
@@ -36,6 +44,13 @@ public class TokenEntityDAO implements CrudRepository<TokenEntity, Long> {
     @Override
     public Optional<TokenEntity> findById(Long id) {
         return Optional.ofNullable(entityManager.find(TokenEntity.class, id));
+    }
+
+    public List<TokenEntity> findByUserId(Long userId) {
+        TypedQuery<TokenEntity> query = entityManager.createQuery(
+                "SELECT t FROM TokenEntity t WHERE t.userId = :userId", TokenEntity.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 
     @Override
