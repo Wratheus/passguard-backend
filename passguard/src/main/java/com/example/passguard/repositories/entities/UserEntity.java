@@ -1,6 +1,7 @@
 package com.example.passguard.repositories.entities;
 
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "users")
@@ -10,10 +11,13 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "email")
+    @NonNull
     private String email;
     @Column(name = "username")
+    @NonNull
     private String username;
     @Column(name = "date")
+    @NonNull
     private long date;
 
     public void setEmail(String email) {
@@ -44,5 +48,13 @@ public class UserEntity {
         return date;
     }
 
-
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

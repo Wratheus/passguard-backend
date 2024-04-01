@@ -1,13 +1,15 @@
 package com.example.passguard.requests.password.get;
 
-import com.example.passguard.models.BaseRequest;
+import org.springframework.lang.NonNull;
 
-public class GetProductRequest extends BaseRequest {
+public class GetProductRequest {
+    @NonNull
+    private final Long id;
+    @NonNull
+    private final String token;
 
-    private final int id;
-
-    public GetProductRequest(String token, int id) {
-        super(token);
+    public GetProductRequest(@NonNull String token, @NonNull Long id) {
         this.id = id;
+        this.token = token;
     }
 }

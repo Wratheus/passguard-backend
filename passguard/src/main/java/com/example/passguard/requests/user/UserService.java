@@ -1,18 +1,13 @@
 package com.example.passguard.requests.user;
 
 import com.example.passguard.DTO.EntityDTOMapper;
-import com.example.passguard.DTO.TokenDTO;
 import com.example.passguard.DTO.UserDTO;
 import com.example.passguard.models.Response;
 import com.example.passguard.models.User;
-import com.example.passguard.repositories.DAO.TokenEntityDAO;
 import com.example.passguard.repositories.DAO.UserEntityDAO;
 import com.example.passguard.repositories.DAO.UserPasswordDAO;
-import com.example.passguard.repositories.entities.TokenEntity;
 import com.example.passguard.repositories.entities.UserEntity;
 import com.example.passguard.repositories.entities.UserPasswordEntity;
-import com.example.passguard.requests.user.get.GetUserRequest;
-import com.example.passguard.requests.user.get.RegisterUserRequest;
 import com.example.passguard.util.JWTTokenProvider;
 import com.example.passguard.util.ResponseConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,41 +16,49 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.HttpURLConnection;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
+
+import static com.example.passguard.PassguardApplication.UserServiceLogger;
 
 @Service
 public class UserService {
-    final private TokenEntityDAO tokenDAO;
     final private UserEntityDAO userDAO;
     final private UserPasswordDAO userPasswordDAO;
     final private JWTTokenProvider tokenProvider;
 
 
     @Autowired
-    public UserService(UserEntityDAO userDao, TokenEntityDAO tokenDAO, UserPasswordDAO userPasswordDAO, JWTTokenProvider tokenProvider) {
+    public UserService(UserEntityDAO userDao, UserPasswordDAO userPasswordDAO, JWTTokenProvider tokenProvider) {
         this.userDAO = userDao;
-        this.tokenDAO = tokenDAO;
         this.userPasswordDAO = userPasswordDAO;
         this.tokenProvider = tokenProvider;
     }
 
     public Response getUser(GetUserRequest request) {
-        if (!tokenProvider.validateToken(request.getToken())) {
+        Optional<String> userIdNullable = tokenProvider.validateToken(request.token());
+        if (userIdNullable.isEmpty()) {
             return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
                     "Failed token validation");
         }
 
-        Long userId = request.getId();
+        long userId;
+        try {
+            userId = Long.parseLong(userIdNullable.get());
+        } catch (NumberFormatException e) {
+            return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
+                    "Failed to parse userId to Long");
+        }
+
         Optional<UserEntity> user = userDAO.findById(userId);
         if (user.isEmpty()) {
             return new Response(ResponseConstants.ERROR, HttpURLConnection.HTTP_CONFLICT,
                     "User not found");
         }
+        UserServiceLogger.info(user.get().toString());
         UserDTO userDTO = EntityDTOMapper.convertUserToUserDto(user.get());
-
+        UserServiceLogger.info(userDTO.toString());
         return new Response(ResponseConstants.SUCCESS, HttpURLConnection.HTTP_OK,
-                new User(1, "alex-pavlenko-net-2013@yandex.ru", "wratheus"));
+                new User(userDTO.getId(), userDTO.getEmail(), userDTO.getUsername()));
     }
 
     @Transactional
@@ -63,28 +66,22 @@ public class UserService {
         Instant date = Instant.now();
         // Запись юзера
         UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(request.getEmail());
-        userEntity.setUsername(request.getUsername());
+        userEntity.setEmail(request.email());
+        userEntity.setUsername(request.username());
         userEntity.setDate(date.toEpochMilli());
         userEntity = userDAO.save(userEntity);
         // Запись пароля
         UserPasswordEntity passwordEntity = new UserPasswordEntity();
-        passwordEntity.setPassword(request.getPassword());
+        passwordEntity.setPassword(request.password());
         passwordEntity.setDate(date.toEpochMilli());
         passwordEntity.setUserId(userEntity.getId());
         userPasswordDAO.save(passwordEntity);
         // Запись JWT
-        String accessToken = tokenProvider.generateToken(userEntity.getUsername());
-        TokenEntity tokenEntity = new TokenEntity();
-        tokenEntity.setToken(accessToken);
-        tokenEntity.setDate(date.toEpochMilli());
-        tokenEntity.setUserId(userEntity.getId());
-        tokenEntity = tokenDAO.save(tokenEntity);
-
+        String accessToken = tokenProvider.generateToken(userEntity.getId());
 
         return new Response(
                 ResponseConstants.SUCCESS,
                 HttpURLConnection.HTTP_OK,
-                tokenEntity);
+                accessToken);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.passguard.repositories.entities;
 
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "tokens")
@@ -10,10 +11,13 @@ public class TokenEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "user_id")
+    @NonNull
     private long userId;
     @Column(name = "token")
+    @NonNull
     private String token;
     @Column(name = "date")
+    @NonNull
     private long date;
 
 

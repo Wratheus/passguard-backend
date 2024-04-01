@@ -1,11 +1,7 @@
 package com.example.passguard.util;
 
-import com.example.passguard.repositories.DAO.TokenEntityDAO;
-import com.example.passguard.repositories.entities.TokenEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,57 +21,38 @@ public class JWTTokenProvider {
     private int jwtExpirationInMs;
 
     private SecretKey secretKey;
-    private final TokenEntityDAO tokenEntityDAO;
 
     @Autowired
-    public JWTTokenProvider(@Value("${app.jwtSecret}") String jwtSecret, TokenEntityDAO tokenEntityDAO) {
+    public JWTTokenProvider(@Value("${app.jwtSecret}") String jwtSecret) {
         this.jwtSecret = jwtSecret;
-        this.tokenEntityDAO = tokenEntityDAO;
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Long userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
-
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userId.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
-    }
-
-    public boolean validateToken(String authToken) {
-        // Извлечение токена из базы данных по переданному токену
-        Optional<TokenEntity> tokenEntityOptional = tokenEntityDAO.findByToken(authToken);
-        if (tokenEntityOptional.isEmpty()) {
-            // Токен не найден в базе данных, считаем его недействительным
-            return false;
-        }
-
-        // Получение токена из Optional
-        TokenEntity tokenEntity = tokenEntityOptional.get();
-        String storedToken = tokenEntity.getToken();
-
-        // Проверка, совпадает ли переданный токен с токеном из базы данных
-        if (!authToken.equals(storedToken)) {
-            // Переданный токен не совпадает с токеном из базы данных, считаем его недействительным
-            return false;
-        }
+    public Optional<String> validateToken(String authToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(authToken);
-            return true;
+            // Разбор токена и получение его тела (payload)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(authToken)
+                    .getBody();
+
+            // Получение userId из тела токена
+            String userId = claims.getSubject();
+
+            // Возвращение userId как Optional
+            return Optional.of(userId);
         } catch (ExpiredJwtException e) {
             LOGGER.error("Токен истек: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
@@ -89,7 +66,8 @@ public class JWTTokenProvider {
         } catch (Exception e) {
             LOGGER.error("Неизвестная ошибка при валидации JWT токена: {}", e.getMessage());
         }
-        return false;
-    }
 
+        // Если не удалось извлечь userId из токена, возвращаем пустой Optional
+        return Optional.empty();
+    }
 }

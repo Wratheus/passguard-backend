@@ -1,8 +1,6 @@
 package com.example.passguard.requests.user;
 
 import com.example.passguard.models.Response;
-import com.example.passguard.requests.user.get.GetUserRequest;
-import com.example.passguard.requests.user.get.RegisterUserRequest;
 import com.example.passguard.util.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

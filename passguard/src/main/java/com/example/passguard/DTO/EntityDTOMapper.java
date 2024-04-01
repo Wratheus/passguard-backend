@@ -14,17 +14,10 @@ public class EntityDTOMapper {
         return userDTO;
     }
 
-    public static ProductDTO convertUserToUserDto(ProductEntity product) {
+    public static ProductDTO convertProductToProductDto(ProductEntity product) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setPassword(product.getPassword());
         productDTO.setLogin(product.getLogin());
         return productDTO;
-    }
-
-    public static TokenDTO convertTokenToUserDto(TokenEntity token) {
-        TokenDTO tokenDTO = new TokenDTO();
-        tokenDTO.setUserId(token.getUserId());
-        tokenDTO.setToken(token.getToken());
-        return tokenDTO;
     }
 }
